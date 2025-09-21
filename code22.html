@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica de Escritura Rítmica</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #9b59b6;
+            --error-color: #e74c3c;
+            --warning-color: #f39c12;
+            --background-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --container-bg: #ffffff;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, var(--background-color) 0%, #e8edf3 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: var(--container-bg);
+            box-shadow: var(--shadow);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .game-controls {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        select, button, input {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 120px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #start-btn {
+            background-color: var(--secondary-color);
+        }
+        
+        #retry-btn {
+            background-color: var(--warning-color);
+        }
+        
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .custom-text {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        #custom-text-input {
+            flex: 1;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #f6f9ff 0%, #edf2ff 100%);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .timer-box {
+            border-left-color: var(--accent-color);
+        }
+        
+        .timer-value {
+            color: var(--accent-color);
+        }
+        
+        .accuracy-box {
+            border-left-color: var(--secondary-color);
+        }
+        
+        .accuracy-value {
+            color: var(--secondary-color);
+        }
+        
+        .text-display {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 200px;
+            font-size: 19px;
+            line-height: 1.8;
+            border: 2px solid #e9ecef;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        
+        .correct {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .incorrect {
+            color: var(--error-color);
+            text-decoration: underline;
+            background-color: rgba(231, 76, 60, 0.1);
+            border-radius: 2px;
+        }
+        
+        .current {
+            background-color: #e3f2fd;
+            padding: 0 2px;
+            border-radius: 3px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            50% {
+                background-color: #bbdefb;
+            }
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            resize: none;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .message {
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .instructions {
+            background-color: #e8f4fd;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .instructions h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .custom-text {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .keyboard-shortcuts {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Escritura Rítmica</h1>
+            <p class="subtitle">Mejora tu velocidad y precisión al escribir</p>
+        </header>
+        
+        <div class="card">
+            <div class="game-controls">
+                <select id="text-select">
+                    <option value="cancion" selected>Canción: Tatuajes</option>
+                    <option value="biblia">Texto Bíblico (≈1000 caracteres)</option>
+                    <option value="poesia">Poesía (≈2000 caracteres)</option>
+                    <option value="articulo">Artículo (≈5000 caracteres)</option>
+                    <option value="discurso">Discurso (≈10000 caracteres)</option>
+                    <option value="custom">Personalizar texto</option>
+                </select>
+                
+                <button id="start-btn">
+                    <i class="fas fa-play"></i> Comenzar
+                </button>
+                <button id="retry-btn" disabled>
+                    <i class="fas fa-undo"></i> Revertir error
+                </button>
+            </div>
+            
+            <div id="custom-text-container" class="custom-text" style="display: none;">
+                <input type="text" id="custom-text-input" placeholder="Escribe o pega tu texto aquí...">
+                <button id="save-custom-btn">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">Puntuación</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            
+            <div class="stat-box timer-box">
+                <div class="stat-label">Tiempo</div>
+                <div class="stat-value timer-value" id="timer">00:00</div>
+            </div>
+            
+            <div class="stat-box accuracy-box">
+                <div class="stat-label">Precisión</div>
+                <div class="stat-value accuracy-value" id="accuracy">100%</div>
+            </div>
+        </div>
+        
+        <div class="message" id="message"></div>
+        
+        <div class="text-display" id="text-display">
+            Tengo unos tatuajes bajo de la piel<br>
+            Que no cicatrizaron y otros se reencarnan<br>
+            No me siento propio y al ver el ocaso<br>
+            Quise ir más despacio, que el tiempo no falta<br>
+            Luz, ¿dónde estabas? Te andaba buscando<br>
+            Un alma pasa, me estoy manifestando<br>
+            Tengo unos tatuajes bajo de la piel<br>
+            Que no cicatrizaron y otros se reencarnan<br>
+            No me siento propio y al ver el ocaso<br>
+            Quise ir más despacio, y el tiempo no falta<br>
+            Tengo unos tatuajes bajo de la piel<br>
+            Que no cicatrizaron y otros se reencarnan<br>
+            No me siento propio y al ver el ocaso<br>
+            Quise ir más despacio, y el tiempo no falta
+        </div>
+        
+        <textarea id="input-field" placeholder="Escribe aquí cuando comience el juego..." disabled></textarea>
+        
+        <div class="instructions">
+            <h3>Instrucciones del juego</h3>
+            <ul>
+                <li>Haz clic en "Comenzar" para iniciar</li>
+                <li>Gana 1 punto por cada carácter correcto</li>
+                <li>Pierde 1 punto por cada error</li>
+                <li>Usa el botón "Revertir error" para corregir un error sin perder puntos (solo una vez)</li>
+                <li>Completa el texto lo más rápido posible con la mayor precisión</li>
+            </ul>
+        </div>
+        
+        <div class="keyboard-shortcuts">
+            <p>Atajos de teclado: Ctrl+Enter para comenzar, Ctrl+Z para revertir error</p>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos de textos
+        const textDatabase = {
+            biblia: `En el principio creó Dios los cielos y la tierra. Y la tierra estaba desordenada y vacía, y las tinieblas estaban sobre la faz del abismo, y el Espíritu de Dios se movía sobre la faz de las aguas. Y dijo Dios: Sea la luz; y fue la luz. Y vio Dios que la luz era buena; y separó Dios la luz de las tinieblas. Y llamó Dios a la luz Día, y a las tinieblas llamó Noche. Y fue la tarde y la mañana un día. Luego dijo Dios: Haya expansión en medio de las aguas, y separe las aguas de las aguas. E hizo Dios la expansión, y separó las aguas que estaban debajo de la expansión, de las aguas que estaban sobre la expansión. Y fue así. Y llamó Dios a la expansión Cielos. Y fue la tarde y la mañana el día segundo.`,
+            
+            poesia: `Caminante, son tus huellas
+el camino y nada más;
+Caminante, no hay camino,
+se hace camino al andar.
+Al andar se hace camino,
+y al volver la vista atrás
+se ve la senda que nunca
+se ha de volver a pisar.
+Caminante no hay camino
+sino estelas en la mar.
+
+Hace algún tiempo en ese lugar
+donde hoy los bosques se visten de espinos
+se oyó la voz de un poeta gritar
+"Caminante no hay camino, se hace camino al andar..."
+
+Golpe a golpe, verso a verso...
+
+Murió el poeta lejos del hogar.
+Le cubre el polvo de un país vecino.
+Al alejarse le vieron llorar.
+"Caminante no hay camino, se hace camino al andar..."
+
+Golpe a golpe, verso a verso...
+
+Cuando el jilguero no puede cantar.
+Cuando el poeta es un peregrino.
+Cuando de nada nos sirve rezar.
+"Caminante no hay camino, se hace camino al andar..."
+
+Golpe a golpe, verso a verso.`,
+            
+            cancion: `Tengo unos tatuajes bajo de la piel
+Que no cicatrizaron y otros se reencarnan
+No me siento propio y al ver el ocaso
+Quise ir más despacio, que el tiempo no falta
+Luz, ¿dónde estabas? Te andaba buscando
+Un alma pasa, me estoy manifestando
+Tengo unos tatuajes bajo de la piel
+Que no cicatrizaron y otros se reencarnan
+No me siento propio y al ver el ocaso
+Quise ir más despacio, y el tiempo no falta
+Tengo unos tatuajes bajo de la piel
+Que no cicatrizaron y otros se reencarnan
+No me siento propio y al ver el ocaso
+Quise ir más despacio, y el tiempo no falta`,
+            
+            articulo: `Texto de artículo de ejemplo. Esta sección contendría un artículo completo con aproximadamente 5000 caracteres. Los artículos pueden tratar sobre diversos temas: tecnología, ciencia, cultura, deportes, etc. El objetivo es practicar la escritura con contenido sustancial que desafíe tu capacidad de mantener la concentración y precisión durante periodos más largos. A medida que avances en el texto, tu puntuación irá aumentando con cada carácter correcto. Recuerda que dispones de un único reintento en caso de error, así que úsalo sabiamente. La consistencia es clave para mejorar la velocidad de escritura y reducir errores. Sigue practicando regularmente para ver mejoras significativas.`,
+            
+            discurso: `Texto de discurso de ejemplo. Esta sección contendría un discurso completo con aproximadamente 10000 caracteres. Los discursos históricos o inspiradores son excelentes para practicar escritura mientras se absorben ideas significativas. Este texto más largo te permitirá poner a prueba tu resistencia y consistencia en la escritura. A lo largo del texto, encontrarás diversas estructuras gramaticales y vocabulario que enriquecerán tu práctica. Mantén el enfoque y trata de minimizar los errores para maximizar tu puntuación. Recuerda el sistema de puntos: cada carácter correcto suma, los errores restan, y tienes una oportunidad de recuperación. ¡Buena suerte y disfruta del desafío!`,
+            
+            custom: ``
+        };
+
+        // Elementos DOM
+        const textSelect = document.getElementById('text-select');
+        const startBtn = document.getElementById('start-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const scoreDisplay = document.getElementById('score');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const timerDisplay = document.getElementById('timer');
+        const messageDiv = document.getElementById('message');
+        const textDisplay = document.getElementById('text-display');
+        const inputField = document.getElementById('input-field');
+        const customTextContainer = document.getElementById('custom-text-container');
+        const customTextInput = document.getElementById('custom-text-input');
+        const saveCustomBtn = document.getElementById('save-custom-btn');
+        const progressBar = document.getElementById('progress-bar');
+
+        // Variables de juego
+        let currentText = textDatabase.cancion;
+        let score = 0;
+        let errors = 0;
+        let retryAvailable = true;
+        let gameActive = false;
+        let correctChars = 0;
+        let totalTyped = 0;
+        let startTime = 0;
+        let timerInterval = null;
+        let lastErrorPosition = -1;
+
+        // Inicializar el juego
+        textSelect.addEventListener('change', handleTextSelect);
+        startBtn.addEventListener('click', startGame);
+        retryBtn.addEventListener('click', useRetry);
+        saveCustomBtn.addEventListener('click', saveCustomText);
+        inputField.addEventListener('input', handleInput);
+        
+        // Atajos de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter' && !gameActive) {
+                startGame();
+            }
+            
+            if (e.ctrlKey && e.key === 'z' && retryAvailable && gameActive) {
+                useRetry();
+            }
+        });
+
+        function handleTextSelect() {
+            if (textSelect.value === 'custom') {
+                customTextContainer.style.display = 'grid';
+            } else {
+                customTextContainer.style.display = 'none';
+                currentText = textDatabase[textSelect.value];
+                textDisplay.innerHTML = formatDisplayText(currentText, 0);
+            }
+        }
+
+        function saveCustomText() {
+            const customText = customTextInput.value.trim();
+            if (customText.length < 10) {
+                showMessage('El texto personalizado debe tener al menos 10 caracteres', 'error');
+                return;
+            }
+            
+            textDatabase.custom = customText;
+            currentText = customText;
+            textDisplay.innerHTML = formatDisplayText(customText, 0);
+            showMessage('Texto personalizado guardado correctamente', 'success');
+        }
+
+        function startGame() {
+            const selectedOption = textSelect.value;
+            
+            if (selectedOption === 'custom' && !textDatabase.custom) {
+                showMessage('Por favor, primero guarda tu texto personalizado', 'error');
+                return;
+            }
+            
+            if (!selectedOption || !textDatabase[selectedOption]) {
+                showMessage('Por favor selecciona un texto para comenzar', 'error');
+                return;
+            }
+            
+            currentText = textDatabase[selectedOption];
+            score = 0;
+            errors = 0;
+            retryAvailable = true;
+            gameActive = true;
+            correctChars = 0;
+            totalTyped = 0;
+            lastErrorPosition = -1;
+            
+            // Actualizar interfaz
+            scoreDisplay.textContent = score;
+            accuracyDisplay.textContent = '100%';
+            timerDisplay.textContent = '00:00';
+            progressBar.style.width = '0%';
+            textDisplay.innerHTML = formatDisplayText(currentText, 0);
+            inputField.value = '';
+            inputField.disabled = false;
+            inputField.focus();
+            retryBtn.disabled = false;
+            retryBtn.classList.remove('used');
+            messageDiv.style.display = 'none';
+            
+            // Iniciar temporizador
+            startTime = Date.now();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+            
+            showMessage('¡Comienza a escribir!', 'success');
+        }
+
+        function updateTimer() {
+            if (!gameActive) return;
+            
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            
+            timerDisplay.textContent = `${minutes}:${seconds}`;
+        }
+
+        function useRetry() {
+            if (!retryAvailable || !gameActive || lastErrorPosition === -1) return;
+            
+            // Restaurar texto hasta antes del error
+            inputField.value = inputField.value.substring(0, lastErrorPosition);
+            inputField.focus();
+            
+            // Recalcular estadísticas
+            handleInput({target: inputField});
+            
+            retryAvailable = false;
+            retryBtn.classList.add('used');
+            retryBtn.disabled = true;
+            
+            showMessage('Has usado tu reintento para corregir el error', 'success');
+        }
+
+        function handleInput(e) {
+            if (!gameActive) return;
+            
+            const inputText = e.target.value;
+            totalTyped = inputText.length;
+            
+            // Actualizar barra de progreso
+            const progress = (totalTyped / currentText.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Verificar precisión
+            let newErrors = 0;
+            let newCorrectChars = 0;
+            let errorFound = false;
+            
+            for (let i = 0; i < inputText.length; i++) {
+                if (i < currentText.length) {
+                    if (inputText[i] === currentText[i]) {
+                        newCorrectChars++;
+                    } else {
+                        newErrors++;
+                        if (!errorFound) {
+                            lastErrorPosition = i;
+                            errorFound = true;
+                        }
+                    }
+                }
+            }
+            
+            // Actualizar estadísticas
+            correctChars = newCorrectChars;
+            errors = newErrors;
+            
+            const accuracy = totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 100;
+            accuracyDisplay.textContent = `${accuracy}%`;
+            
+            // Actualizar puntuación
+            score = correctChars - errors;
+            scoreDisplay.textContent = score;
+            
+            // Actualizar visualización del texto
+            textDisplay.innerHTML = formatDisplayText(currentText, inputText.length);
+            
+            // Comprobar si se completó el texto
+            if (inputText === currentText) {
+                endGame(true);
+            }
+        }
+
+        function formatDisplayText(text, cursorPos) {
+            let result = '';
+            
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                
+                if (i < cursorPos) {
+                    // Caracteres ya escritos
+                    if (char === inputField.value[i]) {
+                        result += `<span class="correct">${char}</span>`;
+                    } else {
+                        result += `<span class="incorrect">${char}</span>`;
+                    }
+                } else if (i === cursorPos) {
+                    // Carácter actual
+                    result += `<span class="current">${char}</span>`;
+                } else {
+                    // Caracteres futuros
+                    result += char;
+                }
+            }
+            
+            return result;
+        }
+
+        function endGame(success) {
+            gameActive = false;
+            inputField.disabled = true;
+            clearInterval(timerInterval);
+            
+            if (success) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                
+                showMessage(`¡Felicidades! Completaste el texto en ${minutes}m ${seconds}s con una puntuación de ${score} y una precisión del ${accuracyDisplay.textContent}`, 'success');
+            }
+        }
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
